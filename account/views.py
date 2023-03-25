@@ -8,7 +8,8 @@ from django.contrib.auth.decorators import login_required
 
 from .forms import LoginForm, UserRegistrationForm, \
                    UserEditForm, ProfileEditForm
-from .models import Profile, Contact
+from .models import Profile
+from images.models import Contact
 from actions.utils import create_action
 from actions.models import Action
 
@@ -60,6 +61,7 @@ def register(request):
             new_user.set_password(user_form.cleaned_data['password'])
             # Save the user object
             new_user.save()
+            # Create the user profile
             Profile.objects.create(user=new_user)
             create_action(new_user, 'has created an account')
             return render(request, 'account/register_done.html', {'new_user': new_user})
@@ -87,7 +89,8 @@ def edit(request):
 
     return render(request, 
                   'account/edit.html', 
-                  {'user_form': user_form, 'profile_form': profile_form})
+                  {'user_form': user_form, 
+                   'profile_form': profile_form})
 
 
 @login_required

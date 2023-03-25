@@ -85,8 +85,10 @@ WSGI_APPLICATION = 'bookmarks.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'bookmarks',
+        'USER': 'bookmarks',
+        'PASSWORD': 'bookmarkspass',
     }
 }
 
@@ -138,8 +140,8 @@ LOGOUT_URL = 'logout'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media/'
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -153,6 +155,19 @@ SOCIAL_AUTH_FACEBOOK_KEY = '3014886855373745' # Facebook App ID
 SOCIAL_AUTH_FACEBOOK_SECRET = '73598ee0b839d530e14016bb7b16e432' # Facebook App Secret
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '352363759032-dbo4dqa7eoa8e9b2torgncbcp5eblihp.apps.googleusercontent.com' # Google Consumer Key
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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' # Google Consumer Secret
+
+SOCIAL_AUTH_PIPELINE = [
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.user.create_user',
+    'account.authentication.create_profile',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+]
 
 ABSOLUTE_URL_OVERRIDES = {
     'auth.user': lambda u: reverse_lazy('user_detail', args=[u.username]),
